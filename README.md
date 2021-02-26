@@ -17,10 +17,22 @@ Its possible to run into some problems with Docker running inside another Docker
 
 To run, you can clone this repository, build the image from the Dockerfile, and then run the container
 
-    docker build --build-arg HOST_DOCKER_GID=$(cut -d: -f3 < <(getent group docker)) -t jenkins-docker .
+```bash
+docker build --build-arg HOST_DOCKER_GID=$(cut -d: -f3 < <(getent group docker)) -t jenkins-docker .	
+```
 
-    docker run -it -p 8080:8080 -p 50000:50000 \
-	    -v jenkins_home:/var/jenkins_home \
-	    -v /var/run/docker.sock:/var/run/docker.sock \
-	    --restart unless-stopped \
-	    jenkins-docker
+```bash
+docker run -it -p 8080:8080 -p 50000:50000 \
+	-v jenkins_home:/var/jenkins_home \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	--restart unless-stopped \
+	jenkins-docker
+```
+
+To run with compose
+
+```bash
+export HOST_DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
+docker-compose up
+```
+
