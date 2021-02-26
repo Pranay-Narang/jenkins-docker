@@ -15,10 +15,7 @@ services:
       - traefik.http.routers.jenkins.tls.certresolver=lets-encrypt
       - traefik.port=8080
     networks:
-      - jenkins-network
+      - web
 
 volumes:
   jenkins:
-
-networks:
-  jenkins-network:
