@@ -15,18 +15,9 @@ This Dockerfile just takes the current, official Jenkins long term support (LTS)
 ### Docker in Docker
 Its possible to run into some problems with Docker running inside another Docker container ([more info here](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)). A better approach is that a container does not run its own Docker daemon, but connects to the Docker daemon of the host system. That means, you will have a Docker CLI in the container, as well as on the host system, but they both connect to one and the same Docker daemon. At any time, there is only one Docker daemon running in your machine, the one running on the host system. This [article from Daniel Weibel](https://itnext.io/docker-in-docker-521958d34efd) really helped me understand this. To do this, you just bind mount to the host system daemon, using this argument when you run Docker: `-v /var/run/docker.sock:/var/run/docker.sock`
 
-### Running the container
-The easiest way is to pull from Docker Hub:
+To run, you can clone this repository, build the image from the Dockerfile, and then run the container
 
-    docker run -it -p 8080:8080 -p 50000:50000 \
-	    -v jenkins_home:/var/jenkins_home \
-	    -v /var/run/docker.sock:/var/run/docker.sock \
-	    --restart unless-stopped \
-	    4oh4/jenkins-docker
-
-Alternatively, you can clone this repository, build the image from the Dockerfile, and then run the container
-
-    docker build -t jenkins-docker .
+    docker build --build-arg HOST_DOCKER_GID=$(cut -d: -f3 < <(getent group docker)) -t jenkins-docker .
 
     docker run -it -p 8080:8080 -p 50000:50000 \
 	    -v jenkins_home:/var/jenkins_home \
