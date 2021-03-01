@@ -19,11 +19,15 @@ RUN apt-get update && \
       "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
       $(lsb_release -cs) \
       stable" && \
-   apt-get update && \
-   apt-get -y --no-install-recommends install docker-ce && \
-   apt-get clean && \
-   usermod -aG docker jenkins && \
-   groupmod -g ${HOST_DOCKER_GID} docker
+    apt-get update && \
+    apt-get -y --no-install-recommends install docker-ce && \
+    apt-get clean && \
+    usermod -aG docker jenkins && \
+    groupmod -g ${HOST_DOCKER_GID} docker
+
+RUN curl -L "https://github.com/docker/compose/releases/download/1.28.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+      chmod +x /usr/local/bin/docker-compose && \
+      ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # drop back to the regular jenkins user - good practice
 USER jenkins
